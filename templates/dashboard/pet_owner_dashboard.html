@@ -1,8 +1,34 @@
-{% include 'index.html'%}
-{% load socialaccount %}
+{% extends 'account/base.html' %}
 {% block content %}
-<h1>Welcome </h1><h1>Pet Owner</h1>
+<!-- Header Section -->
+<header>
+    <h1>Welcome to Your Pet Owner Dashboard, {{ user.first_name }}!</h1>
+    <!-- Include any other header content or navigation links -->
+</header>
 
+<!-- Main Content Section -->
+<main>
+    <section id="booking-section">
+        <h2>Your Bookings</h2>
+        <!-- Display a table or list of the pet owner's bookings -->
+        <table>
+            <!-- Include booking details here -->
+        </table>
+    </section>
 
+    <section id="expenditure-section">
+        <h2>Your Expenditure</h2>
+        <!--<p>Total Expenditure: $[Total Expenditure]</p>-->
+        <!-- Include any other expenditure details or charts -->
+    </section>
+</main>
+
+<!-- Footer Section -->
+<footer>
+    <p>&copy; 2024 Your Pet Sitter App</p>
+    <!-- Include any other footer content or links -->
+</footer>
+
+<!-- Include your JavaScript scripts here -->
 
 {% endblock %}

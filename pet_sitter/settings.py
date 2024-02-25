@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+# from decouple import config
+from collections import OrderedDict
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,16 +39,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_bootstrap4',
+    'crispy_forms',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'constance',
     'users',
+    'dashboard',
 ]
-AUTHENTICATION_BACKENDS = [
-    # ...
+AUTHENTICATION_BACKEND = [
+    # 'gauth.backends.GoogleAuthBackend',
+# Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
-    # ...
 ]
 AUTH_USER_MODEL = 'users.CustomUser'
 MIDDLEWARE = [
@@ -73,6 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'dashboard.context_processors.get_notification',
             ],
         },
     },
@@ -139,7 +149,39 @@ STATICFILES_DIRS=[
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
+# CONSTANCE_CONFIG = {
+#     "EMAIL_HOST_USER": (
+#         "amardeepakgautam@gmail.com",
+#         "EMAIL_HOST_USER",
+#         str,
+#     ),
+#     "EMAIL_HOST_PASSWORD": (
+#         "Jalpari@12345",
+#         "EMAIL_HOST_PASSWORD",
+#         str,
+#     ),
+# }
+#
+# CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
+#     [
+#         (
+#             "Email Configuration",
+#             (
+#                 "EMAIL_HOST_USER",
+#                 "EMAIL_HOST_PASSWORD",
+#             ),
+#         ),
+#     ]
+# )
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Sending emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'google':{
@@ -153,6 +195,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 CRISPY_TEMPLATE_PACK='bootstrap4'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -162,8 +205,12 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_USERNAME = True
 ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URL = 'petowner'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'home'
+# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/login/'
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'account_profile'
+# ACCOUNT_SIGNUP_REDIRECT_URL = "account_profile"
 SOCIALACCOUNT_STORE_TOKENS = True
 ACCOUNT_SESSION_REMEMBER = True
+# LOGIN_REDIRECT_URL = 'petowner'

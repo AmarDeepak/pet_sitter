@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path,include
 from django.views.generic import TemplateView
 from dashboard.views import petowner,petsitter
+from users.views import PetOwnerSignUpView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('',TemplateView.as_view(template_name='index.html'), name='home'),
+    # path('accounts/signup/', PetOwnerSignUpView.as_view()),
     path('petowner/', petowner, name='petowner'),
-    path('petsitter/', petsitter, name='petsitter'),
+    path('',TemplateView.as_view(template_name='dashboard.html'), name='home'),
+    path('users/', include('users.urls')),
+    path("", include("dashboard.urls"))
 ]

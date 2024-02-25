@@ -1,4 +1,4 @@
-# users/models.py
+# users/forms.py
 
 
 from django.conf import settings
@@ -6,6 +6,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
+
+
 
 class CustomUser(AbstractUser):
     # Additional fields for your custom user model (if needed)
@@ -20,6 +22,7 @@ class PetOwner(models.Model):
     # Additional fields specific to pet owners
     # For example, you might include contact information.
     contact_number = models.CharField(max_length=15, blank=True, null=True)
+    zipcode = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):
         return f"Pet Owner: {self.user.username}"

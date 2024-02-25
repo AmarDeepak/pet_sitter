@@ -1,0 +1,76 @@
+<!-- registration/pet_owner_signup.html -->
+
+{% include 'index.html' %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block content %}
+  <div class="w-full text-center mb-3">
+    <p>Already have an account? Then please <a class="text-blue-600" href="{{ login_url }}">sign in</a>.</p>
+  </div>
+
+  <div class="w-[50%] m-auto border rounded-lg">
+    <h1 class="text-center bg-gray-100 h-[52px]">
+      <span class="font-bold text-3xl">Create Your Account</span>
+    </h1>
+    <h2>Sign Up as a Pet Owner</h2>
+
+    <form class="signup" id="signup_form" method="post" action="{% url 'pet_owner_signup' %}">
+      <div class="justify-center mx-3">
+        {% csrf_token %}
+        <div class="w-full border my-3 rounded-lg">
+          {{ form.username }}
+        </div>
+
+        <div class="w-full border my-3 rounded-lg">
+          {{ form.email }}
+        </div>
+        <div class="w-full border my-3 rounded-lg">
+          {{ form.password1 }}
+        </div>
+
+        <div class="w-full border my-3 rounded-lg">
+          {{ form.password2 }}
+        </div>
+        <div class="w-full border my-3 rounded-lg">
+          {{ form.contact_number }}
+        </div>
+        <div class="w-full border my-3 rounded-lg">
+          {{ form.zipcode }}
+        </div>
+
+        {% if redirect_field_value %}
+          <input type="text" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+
+        <button type="submit" class="bg-blue-700 text-white rounded-lg w-[100%] my-3 p-2">
+          {% trans "Sign Up"%}
+        </button>
+      </div>
+    </form>
+
+    <div class="justify-center mx-3">
+      <a href="{% provider_login_url 'google' %}">
+        <button class="bg-red-200 my-3 rounded-lg w-[100%] p-2">
+          Sign in with Google <i class="fa-brands fa-google text-[#e0400b]"></i>
+        </button>
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+<style>
+  #id_username,
+  #id_email,
+  #id_password1,
+  #id_password2,
+  #id_contact_number,
+  #id_zipcode {
+    width: 100%;
+    height: 40px;
+    border-radius: 6px;
+    outline: none;
+    padding: 0 12px 0 12px;
+    font-size: medium;
+  }
+</style>

@@ -4,3 +4,4 @@ users/__pycache__/*
 users/migrations/__pycache__/*
 dashboard/__pycache__/*
 dashboard/migrations/__pycache__/*
+pet_sitter/__pycache__/*

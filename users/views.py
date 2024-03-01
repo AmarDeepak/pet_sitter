@@ -1,5 +1,5 @@
 # users/views.py
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from allauth.account.views import SignupView
 from .forms import PetOwnerSignUpForm, PetSitterSignUpForm
@@ -7,15 +7,37 @@ from users.models import PetOwner, PetSitter
 
 class PetOwnerSignUpView(SignupView):
     form_class = PetOwnerSignUpForm
+    template_name = 'users/registration/pet_owner_signup.html'
 
-    template_name = 'users/registration/pet_owner_signup.html'  # Create this template
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def form_valid(self, form):
-        import pdb
-        pdb.set_trace()
         response = super().form_valid(form)
-        PetOwner.objects.create(user=self.user, contact_number=form.cleaned_data['contact_number'],zipcode=form.cleaned_data['zipcode'])
+
+        # Add your custom logic to create the PetOwner object
+        PetOwner.objects.create(
+            user=self.user,
+            contact_number=form.cleaned_data['contact_number'],
+            zipcode=form.cleaned_data['zipcode']
+        )
+
         return response
+
+    def form_invalid(self, form):
+        print("Form is invalid. Errors:", form.errors)
+        return self.render_to_response(self.get_context_data(form=form))
+        # return self.render_to_response(self.get_context_data(form=form))
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     if form.errors:
+    #         print(form.errors)
+    #     PetOwner.objects.create(user=self.user, contact_number=form.cleaned_data['contact_number'],zipcode=form.cleaned_data['zipcode'])
+    #     return response
 
 class PetSitterSignUpView(SignupView):
     form_class = PetSitterSignUpForm

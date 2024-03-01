@@ -21,10 +21,11 @@ from users.views import PetOwnerSignUpView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
-    # path('accounts/signup/', PetOwnerSignUpView.as_view()),
+    path('accounts/signup/', PetOwnerSignUpView.as_view()),
     path('petowner/', petowner, name='petowner'),
     path('',TemplateView.as_view(template_name='dashboard.html'), name='home'),
-    path('users/', include('users.urls')),
+
     path("", include("dashboard.urls"))
 ]

@@ -10,11 +10,9 @@ from django.views.generic import ListView
 import datetime
 from django.template.loader import render_to_string, get_template
 from django.template import Context
-from constance import config
 # Create your views here.
 
 def petowner(request):
-    import pdb; pdb.set_trace()
     #Need to validate the user.
     return render(request, 'dashboard.html')
 

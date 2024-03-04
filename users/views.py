@@ -30,6 +30,8 @@ class PetOwnerSignUpView(SignupView):
 
     def form_invalid(self, form):
         print("Form is invalid. Errors:", form.errors)
+        import pdb
+        pdb.set_trace()
         return self.render_to_response(self.get_context_data(form=form))
         # return self.render_to_response(self.get_context_data(form=form))
     # def form_valid(self, form):

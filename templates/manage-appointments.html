@@ -381,7 +381,7 @@
                             </div>
                             <hr class="w-100">
                             {% if app.accepted == False %}
-                            <form method="POST" action="{% url 'manage' %}">
+                            <form method="POST" action="{% url 'manage-appointments' %}">
                             {% csrf_token %}
                             <div class="form-group">
                                 <input type="date" name="date" class="form-control mb-2" 

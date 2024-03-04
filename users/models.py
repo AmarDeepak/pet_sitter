@@ -23,7 +23,7 @@ class PetOwner(models.Model):
     # For example, you might include contact information.
     contact_number = models.CharField(max_length=15, blank=True, null=True)
     zipcode = models.CharField(max_length=15, blank=True, null=True)
-
+    user_type = models.CharField(max_length=15, default="pet-owner", null=True, blank=True)
     def __str__(self):
         return f"Pet Owner: {self.user.username}"
 
@@ -40,6 +40,7 @@ class PetSitter(models.Model):
     email = models.EmailField()
     address = models.CharField(max_length=350, blank=True, null=True)
     zipcode = models.CharField(max_length=15, blank=True, null=True)
+    user_type = models.CharField(max_length=15, default="pet-sitter", null=True, blank=True)
 
     def __str__(self):
         return f"Pet Sitter: {self.user.username}"

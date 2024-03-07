@@ -9,4 +9,4 @@ class AppointmentForm(forms.ModelForm):
 
     class Meta:
         model = Appointment
-        fields = ['first_name', 'last_name', 'email','phone', 'selected_pet_sitter']
+        fields = ['first_name', 'last_name', 'email','phone','appointment_date', 'sitter','user', 'selected_pet_sitter']

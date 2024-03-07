@@ -63,7 +63,8 @@ class AppointmentTemplateView(TemplateView):
         email = request.POST.get("email")
         mobile = request.POST.get("mobile")
         message = request.POST.get("request")
-        import pdb; pdb.set_trace()
+        appointment_date = request.POST.get("appointment_date")
+        # import pdb; pdb.set_trace()
         petowner = PetOwner.objects.filter(user=self.request.user).first()
         appointment = Appointment.objects.create(
             user = petowner,
@@ -71,6 +72,7 @@ class AppointmentTemplateView(TemplateView):
             last_name=lname,
             email=email,
             phone=mobile,
+            appointment_date=appointment_date,
             request=message,
             sitter=PetSitter.objects.get(id=request.POST.get('selected_pet_sitter')),
         )
@@ -122,9 +124,10 @@ class ManageAppointmentTemplateView(LoginRequiredMixin,ListView):
 
     def get_context_data(self,*args, **kwargs):
         import pdb
-        pdb.set_trace()
+        # pdb.set_trace()
         context = super().get_context_data(*args, **kwargs)
         context["pet_sitters"] = PetSitter.objects.all()
+        context["appointments"] = self.get_queryset()
 
         # appointments = Appointment.objects.filter(user=11)
         context.update({

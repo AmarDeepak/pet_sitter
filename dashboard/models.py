@@ -22,6 +22,7 @@ class Appointment(models.Model):
     phone = models.CharField(max_length=50)
     request = models.TextField(blank=True)
     sent_date = models.DateField(auto_now_add=True)
+    appointment_date = models.DateField(auto_now_add=False, null=True, blank=True)
     accepted = models.BooleanField(default=False)
     accepted_date = models.DateField(auto_now_add=False, null=True, blank=True)
     sitter = models.ForeignKey(PetSitter, on_delete=models.PROTECT)

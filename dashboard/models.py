@@ -18,6 +18,7 @@ class Appointment(models.Model):
     user = models.ForeignKey(PetOwner, on_delete=models.PROTECT)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    pet_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     request = models.TextField(blank=True)
@@ -25,6 +26,8 @@ class Appointment(models.Model):
     appointment_date = models.DateField(auto_now_add=False, null=True, blank=True)
     accepted = models.BooleanField(default=False)
     accepted_date = models.DateField(auto_now_add=False, null=True, blank=True)
+    cancelled = models.BooleanField(default=False)
+    cancelled_date= models.DateField(auto_now_add=False, null=True, blank=True)
     sitter = models.ForeignKey(PetSitter, on_delete=models.PROTECT)
 
     def __str__(self):

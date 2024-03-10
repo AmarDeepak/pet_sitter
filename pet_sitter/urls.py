@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.views.generic import TemplateView
-from dashboard.views import petowner,petsitter
+from dashboard.views import petowner, petsitter, HomeTemplateView
 from users.views import PetOwnerSignUpView
 
 urlpatterns = [
@@ -25,7 +25,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/signup/', PetOwnerSignUpView.as_view()),
     path('petowner/', petowner, name='petowner'),
-    path('',TemplateView.as_view(template_name='dashboard.html'), name='home'),
+    path('',HomeTemplateView.as_view(), name='home'),
 
     path("", include("dashboard.urls"))
 ]

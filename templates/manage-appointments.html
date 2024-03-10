@@ -362,7 +362,7 @@
             <div class="col-lg-4">
                 <div class="card card-margin">
                     <div class="card-header no-border">
-                        <h5 class="card-title">Pet Owner: {{app.first_name}} {{app.last_name}}</h5>
+                        <h5 class="card-title">Pet Name: {{app.pet_name}}</h5>
 
                     </div>
                     <div class="card-header no-border">
@@ -386,22 +386,59 @@
                             </div>
                             <hr class="w-100">
                             {% if app.accepted == False %}
-                            <form method="POST" action="{% url 'manage-appointments' %}">
+                            <form method="POST" action="{% url 'manage-appointments' %}" id="appointment-form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <input type="date" name="date" class="form-control mb-2" 
+                                {% if request.user.user_type == 'petsitter' %}
+                                <input type="date" name="date" class="form-control mb-2"
                                     placeholder="dd-mm-yyyy" value="{{app.appointment_date|date:'Y-m-d'}}"
-                                    min="1997-01-01" max="2030-12-31" disabled> <!--This need to based on pet sitter or pet owner -->
+                                    min="1997-01-01" max="2030-12-31" {% if request.user.user_type == 'petsitter' %} disabled {% endif %}> <!--This need to based on pet sitter or pet owner -->
                                     <input hidden="true" name="appointment-id" value="{{app.id}}">
+
                                 <input class="btn-block btn-primary form-control" type="submit" value="Accept">
+                                {% endif %}
                             </div>
                             </form>
+
+
+                            {% if request.user.user_type == 'petowner' %}
+                                    <form method="POST" id="update-form" action="{% url 'update-appointment' %}">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="date" name="date" class="form-control mb-2"
+                                            placeholder="dd-mm-yyyy" value="{{app.appointment_date|date:'Y-m-d'}}"
+                                            min="1997-01-01" max="2030-12-31" {% if request.user.user_type == 'petsitter' %} disabled {% endif %}>
+
+                                        <input hidden="true" name="appointment-id" value="{{app.id}}">
+                                        <input class="btn-block btn-primary form-control" type="submit" value="Update">
+                                    </div>
+                                </form>
+
+                                <form method="POST" id="cancel-form" action="{% url 'cancel-appointment' %}">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input hidden="true" name="appointment-id" value="{{app.id}}">
+                                        <input class="btn-block btn-danger form-control" type="submit" value="Cancel">
+                                    </div>
+                                </form>
                             {% endif %}
+                            <script>
+    function submitUpdateForm() {
+        document.getElementById('update-form').submit();
+    }
+
+    function submitCancelForm() {
+        document.getElementById('cancel-form').submit();
+    }
+</script>
+                        {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
+
+
 
         </div>
 

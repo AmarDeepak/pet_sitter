@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block style %}
     .card {
     padding: 30px 40px;
@@ -75,6 +76,7 @@
             <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                 <h3>
                     Book an appointment
+
                 </h3>
                 <p class="blue-text">Use the following form to contact us and request an appointment..</p>
                 <div class="card">
@@ -82,21 +84,20 @@
                     
                     <form class="form-card" method="POST" action="{% url 'appointment' %}">
                     {% csrf_token %}
-                        <div class="pet-sitter-cards">
-  {% for pet_sitter in pet_sitters %}
-    <div class="pet-sitter-card" data-pet-sitter-id="{{ pet_sitter.id }}">
-      <h3>{{ pet_sitter.user.username }}</h3>
-      <p>Certifications: {{ pet_sitter.certifications }}</p>
-      <p>Email: {{ pet_sitter.email }}</p>
-      <!-- Display other pet sitter information as needed -->
-
-      <label>
-        <input type="radio" name="selected_pet_sitter" value="{{ pet_sitter.id }}" required>
-        Select Pet Sitter
-      </label>
-    </div>
-  {% endfor %}
-</div>
+                        <div class="container">
+                            <div class="row text-center">
+                                {% for pet_sitter in pet_sitters %}
+                                   <div class="col-xl-3 col-sm-6 mb-5" data-pet-sitter-id="{{ pet_sitter.id }}">
+                                        <div class="bg-white rounded shadow-sm py-5 px-4"><img src="{% static 'img/team.jpg' %}" alt="" class=" mh-100img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                                            <h5 class="mb-0">{{ pet_sitter.user }}</h5>
+                                            <p>Certifications: {{ pet_sitter.certifications }}</p>
+                                            <p>Email: {{ pet_sitter.email }}</p>
+                                        </div>
+                                       <input type="radio" name="selected_pet_sitter" for="{{ pet_sitter.id }}" value="{{ pet_sitter.id }}" required>
+                                    </div>
+                                {% endfor %}
+                        </div>
+                        </div>
                         <div class="row justify-content-between text-left">
                 <div class="form-group col-sm-6 flex-column d-flex">
                     <label class="form-control-label px-3">Appointment Date<span class="text-danger"> *</span></label>
@@ -106,15 +107,15 @@
                         <div class="row justify-content-between text-left">
 
                             <div class="form-group col-sm-6 flex-column d-flex">
-                            <label class="form-control-label px-3">First name<span class="text-danger"> *</span>
-                            </label> 
-                            <input required type="text" id="fname" name="fname" placeholder="Enter your first name" onblur="validate(1)"> 
-                        </div>
+                                <label class="form-control-label px-3">First name<span class="text-danger"> *</span>
+                                </label>
+                                 <input required type="text" id="fname" name="fname" placeholder="Enter your first name" value="{{ request.user.first_name }}" onblur="validate(1)">
+                            </div>
 
 
                         <div class="form-group col-sm-6 flex-column d-flex"> 
                             <label class="form-control-label px-3">Last name<span class="text-danger"> *</span></label> 
-                            <input required type="text" id="lname" name="lname" placeholder="Enter your last name" onblur="validate(2)"> 
+                            <input required type="text" id="lname" name="lname" placeholder="Enter your last name" value="{{ request.user.last_name }}" onblur="validate(2)">
                         </div>
 
                         </div>
@@ -124,14 +125,20 @@
                             <div class="form-group col-sm-6 flex-column d-flex"> 
                                 <label class="form-control-label px-3">Email<span class="text-danger"> *</span>
                                 </label> 
-                                <input type="text" id="email" name="email" placeholder="" onblur="validate(3)"> 
+                                <input type="text" id="email" name="email" placeholder="" value="{{ request.user.email }}" onblur="validate(3)">
                             </div>
 
                             <div class="form-group col-sm-6 flex-column d-flex"> 
                              <label class="form-control-label px-3">Phone number<span class="text-danger"> *</span></label> 
-                              <input type="text" id="mob" name="mobile" placeholder="" onblur="validate(4)"> 
+                              <input type="text" id="mob" name="mobile" placeholder="Phone Number" onblur="validate(4)">
                             </div>
 
+                        </div>
+                        <div class="row justify-content-between text-left">
+                            <div class="form-group col-sm-6 flex-column d-flex">
+                             <label class="form-control-label px-3">Pet Name<span class="text-danger"> *</span></label>
+                              <input type="text" id="pet_name" name="pet_name" placeholder="Pet Name" onblur="validate(8)">
+                            </div>
                         </div>
 
                         <div class="row justify-content-between text-left">
@@ -161,6 +168,7 @@
             v4 = document.getElementById("mob");
             v6 = document.getElementById("ans");
             v7 = document.getElementById("appointment_date");
+            v8 = document.getElementById("pet_name");
 
             flag1 = true;
             flag2 = true;
@@ -169,6 +177,7 @@
             flag5 = true;
             flag6 = true;
             flag7 = true;
+            flag8 = true;
 
             if (val >= 1 || val == 0) {
                 if (v1.value == "") {
@@ -200,6 +209,17 @@
             flag3 = true;
             }
             }
+            if(val>=8 || val==0) {
+            if(v8.value == "") {
+            v8.style.borderColor = "red";
+            flag8 = false;
+            }
+            else {
+            v8.style.borderColor = "green";
+            flag8 = true;
+            }
+            }
+
             if(val>=4 || val==0) {
             if(v4.value == "") {
             v4.style.borderColor = "red";
@@ -243,10 +263,10 @@
 
 
 
-    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7;
+    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7 && flag8;
     if (!flag) {
             // If any flag is true, prevent form submission
-            alert("Please fill out all required fields correctly.");
+
             return false;
         }
     }

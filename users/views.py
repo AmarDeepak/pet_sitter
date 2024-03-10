@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from allauth.account.views import SignupView
 from .forms import PetOwnerSignUpForm, PetSitterSignUpForm
-from users.models import PetOwner, PetSitter
+from users.models import PetOwner, PetSitter, CustomUser
 
 class PetOwnerSignUpView(SignupView):
     form_class = PetOwnerSignUpForm
@@ -23,15 +23,14 @@ class PetOwnerSignUpView(SignupView):
         PetOwner.objects.create(
             user=self.user,
             contact_number=form.cleaned_data['contact_number'],
-            zipcode=form.cleaned_data['zipcode']
+            zipcode=form.cleaned_data['zipcode'],
         )
-
+        self.user.user_type = CustomUser.UserType.petowner
+        self.user.save()
         return response
 
     def form_invalid(self, form):
         print("Form is invalid. Errors:", form.errors)
-        import pdb
-        pdb.set_trace()
         return self.render_to_response(self.get_context_data(form=form))
         # return self.render_to_response(self.get_context_data(form=form))
     # def form_valid(self, form):
@@ -43,7 +42,7 @@ class PetOwnerSignUpView(SignupView):
 
 class PetSitterSignUpView(SignupView):
     form_class = PetSitterSignUpForm
-    template_name = 'registration/pet_sitter_signup.html'  # Create this template
+    template_name = 'users/registration/pet_sitter_signup.html'  # Create this template
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -54,4 +53,6 @@ class PetSitterSignUpView(SignupView):
             address=form.cleaned_data['address'],
             zipcode=form.cleaned_data['zipcode']
         )
+        self.user.user_type = CustomUser.UserType.petsitter
+        self.user.save()
         return response

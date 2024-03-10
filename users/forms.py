@@ -2,9 +2,23 @@
 
 from django import forms
 from allauth.account.forms import SignupForm
-from .models import PetOwner, PetSitter
+from .models import PetOwner, PetSitter, CustomUser
 
 class PetOwnerSignUpForm(SignupForm):
+    first_name = forms.CharField(label=("First Name"),max_length=15, required=True,
+                                     widget=forms.TextInput(attrs={
+                                         "type": "text",
+                                         "placeholder": ("First Name"),
+                                         "autocomplete": "first_name",
+                                     })
+                                     )
+    last_name = forms.CharField(label=("Last Name"), max_length=15, required=True,
+                                 widget=forms.TextInput(attrs={
+                                     "type": "text",
+                                     "placeholder": ("Last Name"),
+                                     "autocomplete": "last_name",
+                                 })
+                                 )
     contact_number = forms.CharField(label=("Contact Number"),max_length=15, required=False,
                                      widget=forms.TextInput(attrs={
                                          "type": "text",

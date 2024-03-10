@@ -1,20 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect,reverse
 
 from .forms import AppointmentForm
 from .models import Appointment
 from django.http.response import HttpResponseRedirect
 from django.http import HttpResponse
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.core.mail import EmailMessage, message
 from django.conf import settings
 from django.contrib import messages
 from django.views.generic import ListView
 import datetime
 from django.template.loader import render_to_string, get_template
-from users.models import PetOwner, PetSitter
+from users.models import PetOwner, PetSitter, CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.utils import timezone
+
 from django.template import Context
+from django.urls import reverse
 # Create your views here.
 
 def petowner(request):
@@ -27,21 +30,13 @@ def petsitter(request):
 
 class HomeTemplateView(TemplateView):
     template_name = "dashboard.html"
-
-    def post(self, request):
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        message = request.POST.get("message")
-
-        email = EmailMessage(
-            subject= f"{name} from pet sitter family.",
-            body=message,
-            from_email="amardeepakgautam@gmail.com",
-            to=['nirlesh504@hmail.com'],
-            reply_to=[email]
-        )
-        email.send()
-        return HttpResponse("Email sent successfully!")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["pet_sitters"] = PetSitter.objects.all()
+        return context
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, 'dashboard.html', context)
 class AppointmentTemplateView(TemplateView):
     template_name = "appointment.html"
     form_class = AppointmentForm
@@ -50,6 +45,8 @@ class AppointmentTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["pet_sitters"] = PetSitter.objects.all()
+        context["user"] = CustomUser.objects.filter(id=self.request.user.id)
+        print(context["user"])
         return context
 
     def form_valid(self, form):
@@ -62,9 +59,9 @@ class AppointmentTemplateView(TemplateView):
         lname = request.POST.get("fname")
         email = request.POST.get("email")
         mobile = request.POST.get("mobile")
+        pet_name = request.POST.get("pet_name")
         message = request.POST.get("request")
         appointment_date = request.POST.get("appointment_date")
-        # import pdb; pdb.set_trace()
         petowner = PetOwner.objects.filter(user=self.request.user).first()
         appointment = Appointment.objects.create(
             user = petowner,
@@ -74,6 +71,7 @@ class AppointmentTemplateView(TemplateView):
             phone=mobile,
             appointment_date=appointment_date,
             request=message,
+            pet_name=pet_name,
             sitter=PetSitter.objects.get(id=request.POST.get('selected_pet_sitter')),
         )
 
@@ -92,10 +90,16 @@ class ManageAppointmentTemplateView(LoginRequiredMixin,ListView):
 
     def get_queryset(self):
         # Filter appointments based on the logged-in user
-        return Appointment.objects.filter(user=PetOwner.objects.filter(user=self.request.user).first())
+        if self.request.user.user_type == CustomUser.UserType.petowner:
+            return Appointment.objects.filter(user=PetOwner.objects.filter(user=self.request.user).first(),
+                                              cancelled=False)
+        elif self.request.user.user_type == CustomUser.UserType.petsitter:
+            return Appointment.objects.filter(sitter=PetSitter.objects.filter(user=self.request.user).first(),
+                                              cancelled=False)
 
 
     def post(self, request):
+
         date = request.POST.get("date")
         appointment_id = request.POST.get("appointment-id")
         appointment = Appointment.objects.get(id=appointment_id)
@@ -123,8 +127,89 @@ class ManageAppointmentTemplateView(LoginRequiredMixin,ListView):
 
 
     def get_context_data(self,*args, **kwargs):
-        import pdb
-        # pdb.set_trace()
+        context = super().get_context_data(*args, **kwargs)
+        context["pet_sitters"] = PetSitter.objects.all()
+        context["appointments"] = self.get_queryset()
+
+        # appointments = Appointment.objects.filter(user=11)
+        context.update({
+            "title":"Manage Appointments"
+        })
+        return context
+
+
+class CancelAppointmentView(View):
+    template_name = "manage-appointments.html"
+    model = Appointment
+    context_object_name = "appointments"
+    login_required = True
+    login_url = '/login_url/'
+    paginate_by = 3
+
+    def get_queryset(self):
+        # Filter appointments based on the logged-in user
+        if self.request.user.user_type == CustomUser.UserType.petowner:
+            return Appointment.objects.filter(user=PetOwner.objects.filter(user=self.request.user).first(),
+                                              cancelled=False)
+        elif self.request.user.user_type == CustomUser.UserType.petsitter:
+            return Appointment.objects.filter(sitter=PetSitter.objects.filter(user=self.request.user).first(),
+                                              cancelled=False)
+    def get(self,request, *args, **kwargs):
+        # return HttpResponseRedirect(request.path)
+        return redirect(reverse("manage-appointments"))
+        pass
+    def post(self, request, *args, **kwargs):
+        appointment_id = request.POST.get("appointment-id")
+        appointment = Appointment.objects.get(id=appointment_id)
+        appointment.cancelled = True;
+        appointment.cancelled_date = timezone.now().date();
+        appointment.save()
+        messages.add_message(request, messages.SUCCESS, f"Appointment canceled successfully")
+        return redirect(reverse("manage-appointments"))
+
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["pet_sitters"] = PetSitter.objects.all()
+        context["appointments"] = self.get_queryset()
+
+        # appointments = Appointment.objects.filter(user=11)
+        context.update({
+            "title":"Manage Appointments"
+        })
+        return context
+
+class UpdateAppointmentView(View):
+    template_name = "manage-appointments.html"
+    model = Appointment
+    context_object_name = "appointments"
+    login_required = True
+    login_url = '/login_url/'
+    paginate_by = 3
+
+    def get_queryset(self):
+        # Filter appointments based on the logged-in user
+        if self.request.user.user_type == CustomUser.UserType.petowner:
+            return Appointment.objects.filter(user=PetOwner.objects.filter(user=self.request.user).first(),
+                                              cancelled=False)
+        elif self.request.user.user_type == CustomUser.UserType.petsitter:
+            return Appointment.objects.filter(sitter=PetSitter.objects.filter(user=self.request.user).first(),
+                                              cancelled=False)
+
+    def get(self, request, *args, **kwargs):
+        # return HttpResponseRedirect(request.path)
+        return redirect(reverse("manage-appointments"))
+        pass
+    def post(self, request, *args, **kwargs):
+        appointment_id = request.POST.get("appointment-id")
+        new_date = request.POST.get("date")
+        appointment = Appointment.objects.get(id=appointment_id)
+        appointment.appointment_date = new_date
+        appointment.save()
+        messages.add_message(request, messages.SUCCESS, f"Appointment updated successfully")
+        return redirect(reverse("manage-appointments"))
+
+
+    def get_context_data(self,*args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context["pet_sitters"] = PetSitter.objects.all()
         context["appointments"] = self.get_queryset()

@@ -6,13 +6,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
-
+from djchoices import ChoiceItem, DjangoChoices
 
 
 class CustomUser(AbstractUser):
+    class UserType(DjangoChoices):
+        petowner = ChoiceItem("petowner")
+        petsitter = ChoiceItem("petsitter")
     # Additional fields for your custom user model (if needed)
     # For example, you might want to include a profile picture.
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    user_type = models.TextField(choices=UserType.choices,default=UserType.petowner, null=True, blank=True)
 
     def __str__(self):
         return self.username

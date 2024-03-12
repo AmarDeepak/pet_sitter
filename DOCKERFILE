@@ -31,4 +31,4 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 EXPOSE ${PORT}
 
-CMD python -u manage.py
+CMD python manage.py runserver

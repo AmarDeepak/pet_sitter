@@ -20,38 +20,38 @@
 <body>
 
   <div class="header" style="
-  background: rgb(177, 177, 177) url('../static/img/header.png') no-repeat fixed center
+  background: rgb(177, 177, 177) url('../static/img/header.png') no-repeat fixed center; background-size: cover;
   {% if "appointment" in request.path %}
   max-height:300px!important;min-height:300px!important;
   {% endif %}
   ">
     
-    <nav class="navbar navbar-dark navbar-expand-md navigation-clean-search">
-        <div class="container"><a class="navbar-brand" href="{% url 'home' %}">Your Pet Sitter &#128512;</a>
+    <nav class="navbar navbar-dark navbar-expand-lg navigation-clean-search justify-content-between bg-body-tertiary fixed-top">
+        <div class="container"><a class="navbar-brand" href="{% url 'home' %}">&#128062; Paws & Tails  &#x1F43E;</a>
             <button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse"
+            <div class="collapse navbar-collapse justify-content-end"
                 id="navcol-1">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" href="#team">Our Pet Sitter</a>
+                        <a class="nav-link " href="#team">Our Pet Sitter</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" href="#services">Services</a>
+                        <a class="nav-link " href="#services">Services</a>
                     </li>
                     
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" href="#reviews">Testimonial</a>
+                        <a class="nav-link " href="#reviews">Testimonial</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" href="#contact">Contact Us</a>
+                        <a class="nav-link " href="#contact">Contact Us</a>
                     </li>
 
                   {% if request.user.is_authenticated %}
                     <li class="nav-item" role="presentation">
-                      <a class="nav-link active" href="{% url 'manage-appointments' %}">Manage</a>
+                      <a class="nav-link " href="{% url 'manage-appointments' %}">Manage</a>
                     </li>
                     <li class="nav-item" role="presentation">
                     <a href="{% url 'manage-appointments' %}" style="float: left;cursor:pointer;" aria-expanded="true" title="You Have 6 New Appointments">
@@ -63,32 +63,63 @@
                     {% endif %}
                    {% if request.user.is_authenticated %}
                       <li class="nav-item" role="presentation">
-                        <a class="nav-link active" href="{% url 'account_logout' %}">Sign out</a>
+                        <a class="nav-link " href="{% url 'account_logout' %}">Sign out</a>
                       </li>
                     {% else%}
                       <li class="nav-item" role="presentation">
-                        <a class="nav-link active" href="{% url 'pet_owner_signup' %}">Sign in</a>
+                        <a class="nav-link " href="{% url 'pet_owner_signup' %}">Sign in</a>
                       </li>
                     {% endif %}
-
-                  
-         
                 </ul>
             </div>
         </div>
     </nav>
-   
    {% block cta %}{% endblock cta %}
 </div>
-
-
     {% block content %}{% endblock content %}
-
   <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-  
  <script>
     {% block script %}{% endblock script %}
  </script>
-</body>
+<style>
+body{
+    background-color: #d1fff4;
+    }
+@font-face {
+    font-family: 'paw_trails';
+    src: url('/static/fonts/paw_trails-font.otf') format('opentype');
+    }
+.header .navbar {
+    background: #1E3F66;
+    border-bottom: 2px solid #dee2e6;
+    font-family:paw_trails;
+    opacity: 0.7;
+    }
+.nav-item{
+    text-align: right;
+}
+.navbar-brand {
+    color: #fff !important;
+  font-weight: 900; /* Make the brand name stand out */
+  font-size: 25px;
+}
+.navbar-dark .navbar-nav .nav-link {
+  color: #000; /* Color that matches the image */
+  border: 1px solid #1E3F66;
+  border-radius: 25px;
+  font-weight: bold;
+  marging-left: 10px;
+  font-size: 20px;
+  background: lavenderblush;
+}
+.header .navbar-nav .nav-link {
+    margin-right: 5px;
+    }
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: #36454F; /* Highlight color on hover */
+  border: 2px solid #36454F;
+}
+</style>
 
+</body>
 </html>

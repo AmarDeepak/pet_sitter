@@ -1,9 +1,11 @@
 # users/views.py
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from allauth.account.views import SignupView
-from .forms import PetOwnerSignUpForm, PetSitterSignUpForm
-from users.models import PetOwner, PetSitter, CustomUser
+from users.forms import PetOwnerSignUpForm, PetSitterSignUpForm, PetForm
+from users.models import PetOwner, PetSitter, CustomUser, Pet
+from django.shortcuts import render, redirect
+# from django.contrib.auth.decorators import login_required
 
 class PetOwnerSignUpView(SignupView):
     form_class = PetOwnerSignUpForm
@@ -56,3 +58,20 @@ class PetSitterSignUpView(SignupView):
         self.user.user_type = CustomUser.UserType.petsitter
         self.user.save()
         return response
+
+# @login_required
+def create_pet_api(request):
+    if request.method == 'POST':
+        form = PetForm(request.POST, request.FILES)
+        if form.is_valid():
+            pet = form.save(commit=False)
+            pet.owner = request.user
+            pet.save()
+            return JsonResponse({'success': True, 'message': 'Pet created successfully'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+
+def pet_list_api(request):
+    pets = Pet.objects.filter(owner=request.user)
+    data = [{'name': pet.name, 'species': pet.species} for pet in pets]
+    return JsonResponse(data, safe=False)

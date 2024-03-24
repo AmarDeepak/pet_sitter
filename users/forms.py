@@ -2,7 +2,7 @@
 
 from django import forms
 from allauth.account.forms import SignupForm
-from .models import PetOwner, PetSitter, CustomUser
+from .models import PetOwner, PetSitter, CustomUser, Pet
 
 class PetOwnerSignUpForm(SignupForm):
     first_name = forms.CharField(label=("First Name"),max_length=15, required=True,
@@ -46,3 +46,9 @@ class PetSitterSignUpForm(SignupForm):
     class Meta:
         model = PetSitter
         fields = ('certifications', 'email', 'address', 'zipcode')
+
+class PetForm(forms.ModelForm):
+    class Meta:
+        model = Pet
+        fields = ['name', 'species', 'breed', 'age', 'weight', 'photo']
+

@@ -48,3 +48,15 @@ class PetSitter(models.Model):
 
     def __str__(self):
         return f"Pet Sitter: {self.user.username}"
+
+class Pet(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='pets')
+    name = models.CharField(max_length=100)
+    species = models.CharField(max_length=100)
+    breed = models.CharField(max_length=100, blank=True, null=True)
+    age = models.PositiveIntegerField(blank=True, null=True)
+    weight = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    photo = models.ImageField(upload_to='pet_photos/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.species}"

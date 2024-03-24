@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block cta %}
+<div class="header" style="
+  background: rgb(177, 177, 177) url('../static/img/header.png') no-repeat fixed center; background-size: cover;">
 {% if request.user.is_authenticated %}
 <div class="container hero">
         <div class="row">

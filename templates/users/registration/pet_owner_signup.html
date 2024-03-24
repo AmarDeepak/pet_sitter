@@ -1,47 +1,57 @@
 <!-- registration/pet_owner_signup.html -->
 
-{% include 'index.html' %}
+{% load static %}
+{% load account %}
+<!--{% include 'index.html' %}-->
 {% load socialaccount %}
-{% load i18n %}
+<!--{% load i18n %}-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{{title}}</title>
 
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
 {% block content %}
-  <div class="w-full text-center mb-3">
-    <p>Already have an account? Then please <a class="text-blue-600" href="{{ login_url }}">sign in</a>.</p>
-  </div>
+<div class="header" style="
+  background: rgb(177, 177, 177) url('{% static 'img/header.png' %}') no-repeat fixed center; background-size: cover;"/>
 
-  <div class="w-[50%] m-auto border rounded-lg">
-    <h1 class="text-center bg-gray-100 h-[52px]">
-      <span class="font-bold text-3xl">Create Your Account</span>
-    </h1>
+{% include 'navbar.html' %}
+
+
+  <div class="col-sm-6 signup-container border margin m-auto border rounded-lg" style="position: relative; top: 150px;">
+
     <h2>Sign Up as a Pet Owner</h2>
 
     <form class="signup" id="signup_form" method="post" action="{% url 'pet_owner_signup' %}">
       <div class="justify-center mx-3">
         {% csrf_token %}
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full my-3 rounded-lg">
           {{ form.username }}
         </div>
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full my-3 rounded-lg">
           {{ form.first_name }}
         </div>
-
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full  my-3 rounded-lg">
           {{ form.last_name }}
         </div>
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full  my-3 rounded-lg">
           {{ form.email }}
         </div>
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full  my-3 rounded-lg">
           {{ form.password1 }}
         </div>
-
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full  my-3 rounded-lg">
           {{ form.password2 }}
         </div>
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full  my-3 rounded-lg">
           {{ form.contact_number }}
         </div>
-        <div class="w-full border my-3 rounded-lg">
+        <div class="w-full  my-3 rounded-lg">
           {{ form.zipcode }}
         </div>
 
@@ -49,7 +59,7 @@
           <input type="text" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
 
-        <button type="submit" class="bg-blue-700 text-white rounded-lg w-[100%] my-3 p-2">
+        <button type="submit" class="btn btn-success rounded-lg w-[100%] my-3 p-2">
           {% trans "Sign Up"%}
         </button>
       </div>
@@ -57,26 +67,44 @@
 
     <div class="justify-center mx-3">
       <a href="{% provider_login_url 'google' %}">
-        <button class="bg-red-200 my-3 rounded-lg w-[100%] p-2">
-          Sign in with Google <i class="fa-brands fa-google text-[#e0400b]"></i>
+        <button class="btn btn-primary social-btn">
+          Sign in with Google <span style="font-size:20px; font-weight:bold; color:blue">&#71;</span>
         </button>
       </a>
+      <p>Already have an account? Then please <a class="text-blue-600" href="{{ login_url }}">sign in</a>.</p>
     </div>
   </div>
+
+
 {% endblock %}
 
 <style>
+
   #id_username,
   #id_email,
+  #id_first_name,
+  #id_last_name,
   #id_password1,
   #id_password2,
   #id_contact_number,
   #id_zipcode {
     width: 100%;
     height: 40px;
-    border-radius: 6px;
     outline: none;
     padding: 0 12px 0 12px;
     font-size: medium;
+    border: 1px solid #1E3F66;
+    border-radius: 10px;
+
   }
+  div.signup-container{
+  background: lavenderblush;
+  opacity: 0.9;
+  border-radius: 10px !important;
+  padding: 5px;
+  color: #1E3F66;
+  font-family:sans-comics;
+
+  }
+
 </style>

@@ -20,60 +20,10 @@
 <body>
 
   <div class="header" style="
-  background: rgb(177, 177, 177) url('../static/img/header.png') no-repeat fixed center; background-size: cover;
-  {% if "appointment" in request.path %}
-  max-height:300px!important;min-height:300px!important;
-  {% endif %}
-  ">
-    
-    <nav class="navbar navbar-dark navbar-expand-lg navigation-clean-search justify-content-between bg-body-tertiary fixed-top">
-        <div class="container"><a class="navbar-brand" href="{% url 'home' %}">&#128062; Paws & Tails  &#x1F43E;</a>
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end"
-                id="navcol-1">
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link " href="#team">Our Pet Sitter</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link " href="#services">Services</a>
-                    </li>
-                    
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link " href="#reviews">Testimonial</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link " href="#contact">Contact Us</a>
-                    </li>
+  background: rgb(177, 177, 177) url('{% static 'img/header.png' %}') no-repeat fixed center; background-size: cover;"/>
 
-                  {% if request.user.is_authenticated %}
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link " href="{% url 'manage-appointments' %}">Manage</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                    <a href="{% url 'manage-appointments' %}" style="float: left;cursor:pointer;" aria-expanded="true" title="You Have 6 New Appointments">
-                      <i class="far fa-bell" style="font-size: 20px; float: left; color: black">
-                      </i>
-                  </a>
-                  <span class="badge badge-danger">{{count}}</span>
-                </li>
-                    {% endif %}
-                   {% if request.user.is_authenticated %}
-                      <li class="nav-item" role="presentation">
-                        <a class="nav-link " href="{% url 'account_logout' %}">Sign out</a>
-                      </li>
-                    {% else%}
-                      <li class="nav-item" role="presentation">
-                        <a class="nav-link " href="{% url 'pet_owner_signup' %}">Sign in</a>
-                      </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
+
    {% block cta %}{% endblock cta %}
 </div>
     {% block content %}{% endblock content %}
